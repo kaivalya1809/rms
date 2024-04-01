@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Tags</title>
+</head>
+<body>
+    <h1>Add Tags</h1>
+    <form id="tagsForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="displayName">Display Name:</label>
+        <input type="text" id="displayName" name="displayName" required><br><br>
+
+        <label for="category">category:</label>
+        <input type="text" id="category" name="category" required><br><br>
+
+        <label for="imageURL">imageURL:</label>
+        <input type="text" id="imageURL" name="imageURL" required><br><br>
+
+        <label for="universalTagsListId">Universal Tags List ObjectId:</label>
+        <input type="text" id="universalTagsListId" name="universalTagsListId" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById("tagsForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
+            const tagsData = Object.fromEntries(formData.entries());
+
+            // Convert availability to Boolean
+
+            fetch("http://localhost:3000/add-ons", { 
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(tagsData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                alert("Tag added successfully!");
+            })
+            .catch(error => {
+                console.error("There was a problem with your fetch operation:", error);
+                alert("Failed to add Tag!");
+            });
+        });
+    </script>
+</body>
+</html>
